@@ -32,6 +32,11 @@ impl IntoResponse for ServerError {
                 (StatusCode::INTERNAL_SERVER_ERROR, o.to_string()).into_response()
             }
 
+            #[cfg(feature = "serde_json_error")]
+            Self::SerdeJsonError(o) => {
+                (StatusCode::INTERNAL_SERVER_ERROR, o.to_string()).into_response()
+            }
+
             Self::MutexLockError => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
 
             #[cfg(feature = "file_error")]

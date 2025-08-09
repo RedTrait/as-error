@@ -35,6 +35,10 @@ pub enum ServerError {
     #[cfg(feature = "redis_error")]
     #[error("RedisError: {0}")]
     RedisError(#[from] redis::RedisError),
+
+    #[cfg(feature = "serde_json_error")]
+    #[error("SerdeJsonError: {0}")]
+    SerdeJsonError(#[from] serde_json::Error),
 }
 
 pub type ResultExt<T> = Result<T, ServerError>;
