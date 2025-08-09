@@ -5,7 +5,7 @@ pub mod file;
 #[cfg(feature = "tokio_error")]
 pub mod tokio;
 
-pub mod http_parse;
+pub mod http;
 
 pub use thiserror::Error;
 
@@ -17,8 +17,8 @@ pub enum ServerError {
     #[error("InvalidRequest: {0}")]
     InvalidRequest(String),
 
-    #[error("HTTPParseError: {0}")]
-    HTTPParseError(#[from] http_parse::ParseError),
+    #[error("HTTPError: {0}")]
+    HTTPError(#[from] http::HTTPError),
 
     #[error("ServiceError: {0}")]
     ServiceError(String),

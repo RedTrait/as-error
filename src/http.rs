@@ -4,6 +4,12 @@ use std::{io, str::Utf8Error, string::FromUtf8Error};
 use derive_more::{Display, Error};
 use http::uri::InvalidUri;
 
+#[derive(Debug, Display, Error)]
+pub enum HTTPError {
+    #[display("http stream parse error: {}", _0)]
+    ParseError(ParseError),
+}
+
 /// A set of errors that can occur during parsing HTTP streams.
 #[derive(Debug, Display, Error)]
 #[non_exhaustive]
