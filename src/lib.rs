@@ -7,6 +7,9 @@ pub use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ServerError {
+    #[error("PreconditionFailed: {0}")]
+    PreconditionFailed(String),
+
     #[error("Invalid Request: {0}")]
     InvalidRequest(String),
 
