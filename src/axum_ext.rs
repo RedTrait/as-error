@@ -9,6 +9,9 @@ impl IntoResponse for ServerError {
     fn into_response(self) -> Response {
         use axum::http::StatusCode;
 
+        #[cfg(feature = "file_error")]
+        use crate::file::FileError;
+
         let res: Response = match self {
             // TODO: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/412 Incomplete implementation
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/If-Match
@@ -31,21 +34,27 @@ impl IntoResponse for ServerError {
             Self::MutexLockError => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
 
             #[cfg(feature = "file_error")]
-            Self::FileNotFound => (StatusCode::NOT_FOUND, "File not found").into_response(),
-            #[cfg(feature = "file_error")]
-            Self::FileAlreadyExists => {
-                (StatusCode::CONFLICT, "File already exists").into_response()
-            }
-            #[cfg(feature = "file_error")]
-            Self::FileFrozen => (StatusCode::FORBIDDEN, "File is frozen").into_response(),
-            #[cfg(feature = "file_error")]
-            Self::FileWriteFailed(o) => (StatusCode::INTERNAL_SERVER_ERROR, o).into_response(),
-            #[cfg(feature = "file_error")]
-            Self::FileReadFailed => {
-                (StatusCode::INTERNAL_SERVER_ERROR, "File read failed").into_response()
-            }
-            #[cfg(feature = "file_error")]
-            Self::FileDeleteFailed(o) => (StatusCode::INTERNAL_SERVER_ERROR, o).into_response(),
+            Self::FileError(o) => match o {
+                FileError::FileCreateFailed(_) => {
+                    (StatusCode::INTERNAL_SERVER_ERROR, "File create failed").into_response()
+                }
+                FileError::FileDeleteFailed(_) => {
+                    (StatusCode::INTERNAL_SERVER_ERROR, "File delete failed").into_response()
+                }
+                FileError::FileNotFound => {
+                    (StatusCode::NOT_FOUND, "File not found").into_response()
+                }
+                FileError::FileAlreadyExists => {
+                    (StatusCode::CONFLICT, "File already exists").into_response()
+                }
+                FileError::FileFrozen => (StatusCode::FORBIDDEN, "File is frozen").into_response(),
+                FileError::FileWriteFailed(_) => {
+                    (StatusCode::INTERNAL_SERVER_ERROR, "File write failed").into_response()
+                }
+                FileError::FileReadFailed(_) => {
+                    (StatusCode::INTERNAL_SERVER_ERROR, "File read failed").into_response()
+                }
+            },
         };
         res
     }

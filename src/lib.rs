@@ -1,5 +1,7 @@
 #[cfg(feature = "axum")]
 pub mod axum_ext;
+#[cfg(feature = "file_error")]
+pub mod file;
 
 pub mod http_parse;
 
@@ -24,28 +26,8 @@ pub enum ServerError {
     SQLXError(#[from] sqlx::Error),
 
     #[cfg(feature = "file_error")]
-    #[error("FileNotFound")]
-    FileNotFound,
-
-    #[cfg(feature = "file_error")]
-    #[error("FileAlreadyExists")]
-    FileAlreadyExists,
-
-    #[cfg(feature = "file_error")]
-    #[error("FileFrozen")]
-    FileFrozen,
-
-    #[cfg(feature = "file_error")]
-    #[error("FileWriteFailed: {0}")]
-    FileWriteFailed(String),
-
-    #[cfg(feature = "file_error")]
-    #[error("FileReadFailed")]
-    FileReadFailed,
-
-    #[cfg(feature = "file_error")]
-    #[error("FileDeleteFailed: {0}")]
-    FileDeleteFailed(String),
+    #[error("FileError: {0}")]
+    FileError(#[from] file::FileError),
 
     #[cfg(feature = "redis_error")]
     #[error("RedisError: {0}")]
