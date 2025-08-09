@@ -46,6 +46,10 @@ pub enum ServerError {
     #[cfg(feature = "file_error")]
     #[error("FileDeleteFailed: {0}")]
     FileDeleteFailed(String),
+
+    #[cfg(feature = "redis_error")]
+    #[error("RedisError: {0}")]
+    RedisError(#[from] redis::RedisError),
 }
 
 pub type ResultExt<T> = Result<T, ServerError>;
