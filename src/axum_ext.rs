@@ -10,7 +10,7 @@ impl IntoResponse for ServerError {
         let res: Response = match self {
             #[cfg(feature = "service_error")]
             Self::ServiceError(o) => {
-                use crate::service::ServiceError;
+                use crate::error::service::ServiceError;
 
                 match o {
                     // TODO: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/412 Incomplete implementation
@@ -42,7 +42,7 @@ impl IntoResponse for ServerError {
 
             #[cfg(feature = "file_error")]
             Self::FileError(o) => {
-                use crate::file::FileError;
+                use crate::error::file::FileError;
                 match o {
                     FileError::FileCreateFailed(_) => {
                         (StatusCode::INTERNAL_SERVER_ERROR, "File create failed").into_response()

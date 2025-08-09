@@ -1,8 +1,10 @@
+use crate::error;
+
 #[cfg(feature = "file_error")]
-pub(crate) mod file;
+pub use error::file::*;
 #[cfg(feature = "http_error")]
-pub(crate) mod http;
+pub use error::http::*;
 #[cfg(feature = "service_error")]
-pub(crate) mod service;
+pub use error::service::*;
 #[cfg(feature = "tokio_error")]
-pub(crate) mod tokio;
+pub use error::tokio::*;
