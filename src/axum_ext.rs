@@ -61,6 +61,9 @@ impl IntoResponse for ServerError {
                     (StatusCode::INTERNAL_SERVER_ERROR, "File read failed").into_response()
                 }
             },
+
+            #[cfg(feature = "tokio_error")]
+            Self::TokioError(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
         };
         res
     }

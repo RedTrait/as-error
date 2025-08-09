@@ -2,6 +2,8 @@
 pub mod axum_ext;
 #[cfg(feature = "file_error")]
 pub mod file;
+#[cfg(feature = "tokio_error")]
+pub mod tokio;
 
 pub mod http_parse;
 
@@ -39,6 +41,10 @@ pub enum ServerError {
     #[cfg(feature = "serde_json_error")]
     #[error("SerdeJsonError: {0}")]
     SerdeJsonError(#[from] serde_json::Error),
+
+    #[cfg(feature = "tokio_error")]
+    #[error("TokioError: {0}")]
+    TokioError(#[from] tokio::TokioError),
 }
 
 pub type ResultExt<T> = Result<T, ServerError>;
