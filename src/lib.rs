@@ -1,15 +1,10 @@
+pub use thiserror::Error;
+
 #[cfg(feature = "axum_ext")]
 pub mod axum_ext;
-#[cfg(feature = "file_error")]
-pub mod file;
-#[cfg(feature = "http_error")]
-pub mod http;
-#[cfg(feature = "service_error")]
-pub mod service;
-#[cfg(feature = "tokio_error")]
-pub mod tokio;
 
-pub use thiserror::Error;
+pub mod error;
+pub use error::*;
 
 #[derive(Error, Debug)]
 pub enum ServerError {
