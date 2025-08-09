@@ -1,11 +1,11 @@
 #[cfg(feature = "file_error")]
-pub mod file;
+pub(crate) mod file;
 #[cfg(feature = "http_error")]
-pub mod http;
+pub(crate) mod http;
 #[cfg(feature = "service_error")]
-pub mod service;
+pub(crate) mod service;
 #[cfg(feature = "tokio_error")]
-pub mod tokio;
+pub(crate) mod tokio;
 
 #[cfg(feature = "file_error")]
 pub use file::*;
