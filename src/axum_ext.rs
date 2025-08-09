@@ -19,8 +19,10 @@ impl IntoResponse for ServerError {
             // Consider adding header validation
             Self::PreconditionFailed(o) => (StatusCode::PRECONDITION_FAILED, o).into_response(),
             Self::InvalidRequest(o) => (StatusCode::BAD_REQUEST, o.to_string()).into_response(),
-            Self::HTTPError(o) => (StatusCode::BAD_REQUEST, o.to_string()).into_response(),
             Self::ServiceError(o) => (StatusCode::INTERNAL_SERVER_ERROR, o).into_response(),
+
+            #[cfg(feature = "http_error")]
+            Self::HTTPError(o) => (StatusCode::BAD_REQUEST, o.to_string()).into_response(),
 
             #[cfg(feature = "sqlx_error")]
             Self::SQLXError(o) => {

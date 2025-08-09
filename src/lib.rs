@@ -1,11 +1,11 @@
-#[cfg(feature = "axum")]
+#[cfg(feature = "axum_ext")]
 pub mod axum_ext;
 #[cfg(feature = "file_error")]
 pub mod file;
+#[cfg(feature = "http_error")]
+pub mod http;
 #[cfg(feature = "tokio_error")]
 pub mod tokio;
-
-pub mod http;
 
 pub use thiserror::Error;
 
@@ -17,14 +17,15 @@ pub enum ServerError {
     #[error("InvalidRequest: {0}")]
     InvalidRequest(String),
 
-    #[error("HTTPError: {0}")]
-    HTTPError(#[from] http::HTTPError),
-
     #[error("ServiceError: {0}")]
     ServiceError(String),
 
     #[error("MutexLockError")]
     MutexLockError,
+
+    #[cfg(feature = "http_error")]
+    #[error("HTTPError: {0}")]
+    HTTPError(#[from] http::HTTPError),
 
     #[cfg(feature = "sqlx_error")]
     #[error("SQLXError: {0}")]
