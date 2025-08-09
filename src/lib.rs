@@ -1,9 +1,9 @@
-pub use thiserror::Error;
+use thiserror::Error;
 
 #[cfg(feature = "axum_ext")]
 pub mod axum_ext;
 
-pub mod error;
+mod error;
 pub use error::*;
 
 #[derive(Error, Debug)]

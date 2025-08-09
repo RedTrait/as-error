@@ -1,14 +1,12 @@
-pub use axum::{
+use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
 
-pub use crate::ServerError;
+use crate::ServerError;
 
 impl IntoResponse for ServerError {
     fn into_response(self) -> Response {
-        use axum::http::StatusCode;
-
         let res: Response = match self {
             #[cfg(feature = "service_error")]
             Self::ServiceError(o) => {
