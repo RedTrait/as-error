@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 thiserror = "2.0"
 derive_more = "2.0"
+httparse = "1.10"
