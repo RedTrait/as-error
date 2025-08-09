@@ -5,16 +5,20 @@ edition = "2024"
 
 [dependencies]
 thiserror = "2.0"
-derive_more = { version = "2.0",  features = ["display", "error", "from"] }
+derive_more = { version = "2.0", features = ["display", "error", "from"] }
 httparse = "1.10"
 http = "1.3"
 
 axum = { version = "0.8", optional = true }
 sqlx = { version = "0.8", optional = true }
+redis = { version = "0.32.4", optional = true }
 
 [features]
-default = ["axum", "tus_error"]
+default = ["axum"]
 
 axum = ["dep:axum"]
 sqlx_error = ["dep:sqlx"]
-tus_error = []
+file_error = []
+redis_error = ["dep:redis"]
+
+full = ["axum", "sqlx_error", "redis_error", "file_error"]
