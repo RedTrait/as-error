@@ -10,17 +10,17 @@ pub enum ServerError {
     #[error("PreconditionFailed: {0}")]
     PreconditionFailed(String),
 
-    #[error("Invalid Request: {0}")]
+    #[error("InvalidRequest: {0}")]
     InvalidRequest(String),
 
-    #[error("HTTP Parse: {0}")]
+    #[error("HTTPParseError: {0}")]
     HTTPParseError(#[from] http_parse::ParseError),
 
-    #[error("mutex lock error")]
+    #[error("MutexLockError")]
     MutexLockError,
 
     #[cfg(feature = "sqlx_error")]
-    #[error("SQLXError info: {0}")]
+    #[error("SQLXError: {0}")]
     SQLXError(#[from] sqlx::Error),
 }
 
