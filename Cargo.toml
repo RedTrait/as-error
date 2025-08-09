@@ -24,9 +24,9 @@ full = [
 	"sqlx_error",
 	"redis_error",
 	"file_error",
-	"serde_json_error",
 	"tokio_error",
 	"http_error",
+	"service_error",
 ]
 
 axum_ext = ["dep:axum"]
@@ -34,6 +34,6 @@ axum_ext = ["dep:axum"]
 http_error = ["dep:http", "dep:httparse"]
 sqlx_error = ["dep:sqlx"]
 file_error = []
+service_error = ["dep:serde_json"]
 redis_error = ["dep:redis"]
-serde_json_error = ["dep:serde_json"]
 tokio_error = ["dep:tokio"]

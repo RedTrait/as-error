@@ -4,6 +4,8 @@ pub mod axum_ext;
 pub mod file;
 #[cfg(feature = "http_error")]
 pub mod http;
+#[cfg(feature = "service_error")]
+pub mod service;
 #[cfg(feature = "tokio_error")]
 pub mod tokio;
 
@@ -11,17 +13,9 @@ pub use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ServerError {
-    #[error("PreconditionFailed: {0}")]
-    PreconditionFailed(String),
-
-    #[error("InvalidRequest: {0}")]
-    InvalidRequest(String),
-
+    #[cfg(feature = "service_error")]
     #[error("ServiceError: {0}")]
-    ServiceError(String),
-
-    #[error("MutexLockError")]
-    MutexLockError,
+    ServiceError(#[from] service::ServiceError),
 
     #[cfg(feature = "http_error")]
     #[error("HTTPError: {0}")]
@@ -38,10 +32,6 @@ pub enum ServerError {
     #[cfg(feature = "redis_error")]
     #[error("RedisError: {0}")]
     RedisError(#[from] redis::RedisError),
-
-    #[cfg(feature = "serde_json_error")]
-    #[error("SerdeJsonError: {0}")]
-    SerdeJsonError(#[from] serde_json::Error),
 
     #[cfg(feature = "tokio_error")]
     #[error("TokioError: {0}")]
