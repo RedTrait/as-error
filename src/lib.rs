@@ -18,6 +18,9 @@ pub enum ServerError {
     #[error("HTTPParseError: {0}")]
     HTTPParseError(#[from] http_parse::ParseError),
 
+    #[error("ServiceError: {0}")]
+    ServiceError(String),
+
     #[error("MutexLockError")]
     MutexLockError,
 
