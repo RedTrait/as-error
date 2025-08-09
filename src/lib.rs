@@ -1,23 +1,21 @@
+#[cfg(feature = "axum")]
+pub mod axum_ext;
+
 pub mod http_parse;
 
 pub use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum ServerError {
+    #[error("mutex lock error")]
+    MutexLockError,
+
     #[error("HTTP Parse: {0}")]
     HTTPParseError(#[from] http_parse::ParseError),
+    
+    #[cfg(feature = "sqlx_error")]
+    #[error("SQLXError info: {0}")]
+    SQLXError(#[from] sqlx::Error),
 }
 
-#[cfg(feature = "axum")]
-pub use axum::response::{IntoResponse, Response};
-
-#[cfg(feature = "axum")]
-impl IntoResponse for ServerError {
-    fn into_response(self) -> Response {
-        use axum::http::StatusCode;
-        let res = match self {
-            Self::HTTPParseError(info) => (StatusCode::BAD_REQUEST, info.to_string()),
-        };
-        res.into_response()
-    }
-}
+pub type ResultExt<T> = Result<T, ServerError>;
