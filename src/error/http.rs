@@ -8,7 +8,7 @@ use http::uri::InvalidUri;
 pub enum HTTPError {
     #[display("http stream parse error: {}", _0)]
     ParseError(ParseError),
-    #[display("http stream content type error: {}", _0)]
+    #[display("http content type parse error: {}", _0)]
     ContentTypeError(ContentTypeError),
     #[display("http payload parse error: {}", _0)]
     PayloadError(PayloadError),
