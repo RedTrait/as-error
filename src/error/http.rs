@@ -8,6 +8,8 @@ use http::uri::InvalidUri;
 pub enum HTTPError {
     #[display("http stream parse error: {}", _0)]
     ParseError(ParseError),
+    #[display("http stream content type error: {}", _0)]
+    ContentTypeError(ContentTypeError),
 }
 
 /// A set of errors that can occur during parsing HTTP streams.
@@ -92,4 +94,18 @@ impl From<httparse::Error> for ParseError {
             httparse::Error::Version => ParseError::Version,
         }
     }
+}
+
+/// A set of error that can occur during parsing content type.
+#[derive(Debug, Display, Error)]
+#[cfg_attr(test, derive(PartialEq, Eq))]
+#[non_exhaustive]
+pub enum ContentTypeError {
+    /// Can not parse content type.
+    #[display("could not parse content type")]
+    ParseError,
+
+    /// Unknown content encoding.
+    #[display("unknown content encoding")]
+    UnknownEncoding,
 }
