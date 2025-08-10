@@ -10,6 +10,8 @@ pub enum HTTPError {
     ParseError(ParseError),
     #[display("http stream content type error: {}", _0)]
     ContentTypeError(ContentTypeError),
+    #[display("http payload parse error: {}", _0)]
+    PayloadError(PayloadError),
 }
 
 /// A set of errors that can occur during parsing HTTP streams.
@@ -108,4 +110,68 @@ pub enum ContentTypeError {
     /// Unknown content encoding.
     #[display("unknown content encoding")]
     UnknownEncoding,
+}
+
+/// A set of errors that can occur during payload parsing.
+#[derive(Debug, Display)]
+#[non_exhaustive]
+pub enum PayloadError {
+    /// A payload reached EOF, but is not complete.
+    #[display("payload reached EOF before completing: {:?}", _0)]
+    Incomplete(Option<io::Error>),
+
+    /// Content encoding stream corruption.
+    #[display("can not decode content-encoding")]
+    EncodingCorrupted,
+
+    /// Payload reached size limit.
+    #[display("payload reached size limit")]
+    Overflow,
+
+    /// Payload length is unknown.
+    #[display("payload length is unknown")]
+    UnknownLength,
+
+    /// HTTP/2 payload error.
+    #[cfg(feature = "http2_error")]
+    #[display("{}", _0)]
+    Http2Payload(::h2::Error),
+
+    /// Generic I/O error.
+    #[display("{}", _0)]
+    Io(io::Error),
+}
+
+impl std::error::Error for PayloadError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            PayloadError::Incomplete(None) => None,
+            PayloadError::Incomplete(Some(err)) => Some(err),
+            PayloadError::EncodingCorrupted => None,
+            PayloadError::Overflow => None,
+            PayloadError::UnknownLength => None,
+            #[cfg(feature = "http2_error")]
+            PayloadError::Http2Payload(err) => Some(err),
+            PayloadError::Io(err) => Some(err),
+        }
+    }
+}
+
+#[cfg(feature = "http2_error")]
+impl From<::h2::Error> for PayloadError {
+    fn from(err: ::h2::Error) -> Self {
+        PayloadError::Http2Payload(err)
+    }
+}
+
+impl From<Option<io::Error>> for PayloadError {
+    fn from(err: Option<io::Error>) -> Self {
+        PayloadError::Incomplete(err)
+    }
+}
+
+impl From<io::Error> for PayloadError {
+    fn from(err: io::Error) -> Self {
+        PayloadError::Incomplete(Some(err))
+    }
 }
