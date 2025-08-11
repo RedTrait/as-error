@@ -23,7 +23,11 @@ impl ResponseError for ServerError {
                     ServiceError::MutexLockError(_)
                     | ServiceError::StaticMutexLockError(_)
                     | ServiceError::JsonError(_)
-                    | ServiceError::StaticJsonError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+                    | ServiceError::StaticJsonError(_)
+                    | ServiceError::InternalServiceError(_, _)
+                    | ServiceError::StaticInternalServiceError(_, _) => {
+                        StatusCode::INTERNAL_SERVER_ERROR
+                    }
 
                     ServiceError::RetryError => StatusCode::SERVICE_UNAVAILABLE,
                 }
@@ -100,6 +104,14 @@ impl ResponseError for ServerError {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::SERVICE_UNAVAILABLE)
                             .body(SERVICE_RETRY_ERROR)
+                    }
+                    ServiceError::InternalServiceError(_err, info) => {
+                        // TODO: write to log
+                        HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(info.clone())
+                    }
+                    ServiceError::StaticInternalServiceError(_, info) => {
+                        // TODO: write to log
+                        HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(*info)
                     }
                 }
             }

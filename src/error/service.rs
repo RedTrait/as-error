@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -28,6 +30,12 @@ pub enum ServiceError {
 
     #[error("RetryError")]
     RetryError,
+
+    #[error("InternalServiceError: {0}")]
+    InternalServiceError(Box<dyn Error + Send + Sync>, String),
+
+    #[error("StaticInternalServiceError: {0}")]
+    StaticInternalServiceError(Box<dyn Error + Send + Sync>, &'static str),
 }
 
 impl From<serde_json::Error> for ServiceError {
