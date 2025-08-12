@@ -10,7 +10,6 @@ pub use prelude::*;
 pub mod const_define {
     // Service ERROR start with 00_XXXX
     pub(crate) const SERVICE_ERROR: &'static str = "00_0000";
-    pub(crate) const SERVICE_RETRY_ERROR: &'static str = "00_0001";
 
     // SQLx ERROR start with 01_XXXX
     pub(crate) const SQLX_ERROR: &'static str = "01_0000";

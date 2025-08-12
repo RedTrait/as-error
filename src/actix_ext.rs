@@ -13,23 +13,26 @@ impl ResponseError for ServerError {
                     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/If-Match
                     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/If-Unmodified-Since
                     // Consider adding header validation
-                    ServiceError::PreconditionFailed(_)
-                    | ServiceError::StaticPreconditionFailed(_) => StatusCode::PRECONDITION_FAILED,
-
-                    ServiceError::InvalidRequest(_) | ServiceError::StaticInvalidRequest(_) => {
-                        StatusCode::BAD_REQUEST
+                    ServiceError::PreconditionFailed(_, _)
+                    | ServiceError::StaticPreconditionFailed(_, _) => {
+                        StatusCode::PRECONDITION_FAILED
                     }
 
-                    ServiceError::MutexLockError(_)
-                    | ServiceError::StaticMutexLockError(_)
-                    | ServiceError::JsonError(_)
-                    | ServiceError::StaticJsonError(_)
+                    ServiceError::InvalidRequest(_, _)
+                    | ServiceError::StaticInvalidRequest(_, _) => StatusCode::BAD_REQUEST,
+
+                    ServiceError::MutexLockError(_, _)
+                    | ServiceError::StaticMutexLockError(_, _)
+                    | ServiceError::JsonError(_, _)
+                    | ServiceError::StaticJsonError(_, _)
                     | ServiceError::InternalServiceError(_, _)
                     | ServiceError::StaticInternalServiceError(_, _) => {
                         StatusCode::INTERNAL_SERVER_ERROR
                     }
 
-                    ServiceError::RetryError => StatusCode::SERVICE_UNAVAILABLE,
+                    ServiceError::RetryError(_, _) | ServiceError::StaticRetryError(_, _) => {
+                        StatusCode::SERVICE_UNAVAILABLE
+                    }
                 }
             }
 
@@ -68,42 +71,44 @@ impl ResponseError for ServerError {
                     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/If-Match
                     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/If-Unmodified-Since
                     // Consider adding header validation
-                    ServiceError::PreconditionFailed(info) => {
+                    ServiceError::PreconditionFailed(_err, info) => {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::PRECONDITION_FAILED).body(info.clone())
                     }
-                    ServiceError::StaticPreconditionFailed(info) => {
+                    ServiceError::StaticPreconditionFailed(_err, info) => {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::PRECONDITION_FAILED).body(*info)
                     }
-                    ServiceError::InvalidRequest(info) => {
+                    ServiceError::InvalidRequest(_err, info) => {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::BAD_REQUEST).body(info.clone())
                     }
-                    ServiceError::StaticInvalidRequest(info) => {
+                    ServiceError::StaticInvalidRequest(_err, info) => {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::BAD_REQUEST).body(*info)
                     }
-                    ServiceError::MutexLockError(_info) => {
+                    ServiceError::MutexLockError(_err, _info) => {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(SERVICE_ERROR)
                     }
-                    ServiceError::StaticMutexLockError(_info) => {
+                    ServiceError::StaticMutexLockError(_err, _info) => {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(SERVICE_ERROR)
                     }
-                    ServiceError::JsonError(info) => {
+                    ServiceError::JsonError(_err, info) => {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(info.clone())
                     }
-                    ServiceError::StaticJsonError(info) => {
+                    ServiceError::StaticJsonError(_err, info) => {
                         // TODO: write to log
                         HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(*info)
                     }
-                    ServiceError::RetryError => {
+                    ServiceError::RetryError(_err, info) => {
                         // TODO: write to log
-                        HttpResponse::build(StatusCode::SERVICE_UNAVAILABLE)
-                            .body(SERVICE_RETRY_ERROR)
+                        HttpResponse::build(StatusCode::SERVICE_UNAVAILABLE).body(info.clone())
+                    }
+                    ServiceError::StaticRetryError(_err, info) => {
+                        HttpResponse::build(StatusCode::SERVICE_UNAVAILABLE).body(*info)
                     }
                     ServiceError::InternalServiceError(_err, info) => {
                         // TODO: write to log
