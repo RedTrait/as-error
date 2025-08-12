@@ -9,5 +9,10 @@ pub enum SignUpError {
 
 fn main() {
     let e = SignUpError::NormalAvatarNotCreate;
-    let _ = ServerError::static_internal_service_error(e, "Failed to create normal avatar");
+    let quick_error = static_precondition_failed!(e, "This is a static precondition failed error");
+    println!("Quick error: {}", quick_error);
+    let e = SignUpError::NormalAvatarNotCreate;
+    let info = String::from("This is a string error");
+    let error = precondition_failed!(e, info);
+    println!("Error: {}", error);
 }
