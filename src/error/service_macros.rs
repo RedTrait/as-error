@@ -1,5 +1,5 @@
 #[macro_export]
-macro_rules! internal_request {
+macro_rules! invalid_request {
     ($err:expr, $info:expr) => {
         ServerError::ServiceError(ServiceError::InvalidRequest(Box::new($err), $info.into()))
     };

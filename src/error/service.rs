@@ -67,17 +67,17 @@ pub mod tests {
     }
 
     #[test]
-    fn internal_request() {
-        let error = internal_request!(TestThisError::TestError, "H").to_string();
+    fn invalid_request() {
+        let error = invalid_request!(TestThisError::TestError, "H").to_string();
         assert_eq!("ServiceError: InvalidRequest: TestThisError", error);
-        let error = internal_request!(TestderiveMoreError::TestError, "H").to_string();
+        let error = invalid_request!(TestderiveMoreError::TestError, "H").to_string();
         assert_eq!("ServiceError: InvalidRequest: TestderiveMoreError", error);
-        let error = internal_request!(TestThisError::TestError, "H".to_owned()).to_string();
+        let error = invalid_request!(TestThisError::TestError, "H".to_owned()).to_string();
         assert_eq!("ServiceError: InvalidRequest: TestThisError", error);
     }
 
     #[test]
-    fn static_internal_request() {
+    fn static_invalid_request() {
         let error = static_invalid_request!(TestThisError::TestError, "H").to_string();
         assert_eq!("ServiceError: StaticInvalidRequest: TestThisError", error);
         let error = static_invalid_request!(TestderiveMoreError::TestError, "H").to_string();
