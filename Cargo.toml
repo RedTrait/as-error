@@ -30,3 +30,6 @@ file_error = []
 service_error = ["dep:serde_json"]
 redis_error = ["dep:redis"]
 tokio_error = ["dep:tokio"]
+
+[dev-dependencies]
+serde = "1.0.219"
