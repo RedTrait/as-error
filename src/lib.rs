@@ -1,5 +1,3 @@
-use thiserror::Error;
-
 pub mod actix_ext;
 
 pub mod error;
@@ -32,7 +30,7 @@ pub mod const_define {
     pub(crate) const TOKIO_TASK_JOIN_ERROR: &'static str = "04_0001";
 }
 
-#[derive(Error, Debug)]
+#[derive(thiserror::Error, Debug)]
 pub enum ServerError {
     #[cfg(feature = "service_error")]
     #[error("ServiceError: {0}")]
