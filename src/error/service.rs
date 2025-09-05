@@ -1,46 +1,60 @@
-use std::error::Error;
-
-use thiserror::Error;
-
 /// first argument use in local dev
 /// second argument use to response user
-#[derive(Error, Debug)]
+#[derive(thiserror::Error, Debug)]
 pub enum ServiceError {
     #[error("InvalidRequest: {0}")]
-    InvalidRequest(Box<dyn Error + Send + Sync + 'static>, String),
+    InvalidRequest(Box<dyn std::error::Error + Send + Sync + 'static>, String),
 
     #[error("StaticInvalidRequest: {0}")]
-    StaticInvalidRequest(Box<dyn Error + Send + Sync + 'static>, &'static str),
+    StaticInvalidRequest(
+        Box<dyn std::error::Error + Send + Sync + 'static>,
+        &'static str,
+    ),
 
     #[error("PreconditionFailed: {0}")]
-    PreconditionFailed(Box<dyn Error + Send + Sync + 'static>, String),
+    PreconditionFailed(Box<dyn std::error::Error + Send + Sync + 'static>, String),
 
     #[error("StaticPreconditionFailed: {0}")]
-    StaticPreconditionFailed(Box<dyn Error + Send + Sync + 'static>, &'static str),
+    StaticPreconditionFailed(
+        Box<dyn std::error::Error + Send + Sync + 'static>,
+        &'static str,
+    ),
 
     #[error("MutexLockError: {0}")]
-    MutexLockError(Box<dyn Error + Send + Sync + 'static>, String),
+    MutexLockError(Box<dyn std::error::Error + Send + Sync + 'static>, String),
 
     #[error("StaticMutexLockError: {0}")]
-    StaticMutexLockError(Box<dyn Error + Send + Sync + 'static>, &'static str),
+    StaticMutexLockError(
+        Box<dyn std::error::Error + Send + Sync + 'static>,
+        &'static str,
+    ),
 
     #[error("JsonError: {0}")]
-    JsonError(Box<dyn Error + Send + Sync + 'static>, String),
+    JsonError(Box<dyn std::error::Error + Send + Sync + 'static>, String),
 
     #[error("StaticJsonError: {0}")]
-    StaticJsonError(Box<dyn Error + Send + Sync + 'static>, &'static str),
+    StaticJsonError(
+        Box<dyn std::error::Error + Send + Sync + 'static>,
+        &'static str,
+    ),
 
     #[error("RetryError: {0}")]
-    RetryError(Box<dyn Error + Send + Sync>, String),
+    RetryError(Box<dyn std::error::Error + Send + Sync>, String),
 
     #[error("StaticRetryError: {0}")]
-    StaticRetryError(Box<dyn Error + Send + Sync + 'static>, &'static str),
+    StaticRetryError(
+        Box<dyn std::error::Error + Send + Sync + 'static>,
+        &'static str,
+    ),
 
     #[error("InternalServiceError: {0}")]
-    InternalServiceError(Box<dyn Error + Send + Sync>, String),
+    InternalServiceError(Box<dyn std::error::Error + Send + Sync>, String),
 
     #[error("StaticInternalServiceError: {0}")]
-    StaticInternalServiceError(Box<dyn Error + Send + Sync + 'static>, &'static str),
+    StaticInternalServiceError(
+        Box<dyn std::error::Error + Send + Sync + 'static>,
+        &'static str,
+    ),
 }
 
 impl From<serde_json::Error> for ServiceError {

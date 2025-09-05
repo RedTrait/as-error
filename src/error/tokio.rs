@@ -1,7 +1,6 @@
-use derive_more::{Display, Error};
 use tokio::task::JoinError;
 
-#[derive(Display, Error, Debug)]
+#[derive(derive_more::Display, derive_more::Error, Debug)]
 pub enum TokioError {
     #[display("JoinError: {}", _0)]
     TaskJoinError(JoinError),
