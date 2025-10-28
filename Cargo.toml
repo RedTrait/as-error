@@ -32,4 +32,4 @@ redis_error = ["dep:redis"]
 tokio_error = ["dep:tokio"]
 
 [dev-dependencies]
-serde = "1.0.219"
+serde = "1.0"
