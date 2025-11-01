@@ -58,6 +58,16 @@ impl ResponseError for ServerError {
 
             #[cfg(feature = "tokio_error")]
             Self::TokioError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+
+            #[cfg(feature = "client_error")]
+            Self::ClientConnectError(_)
+            | Self::ClientFreezeRequestError(_)
+            | Self::ClientHttpError(_)
+            | Self::ClientJsonPayloadError(_)
+            | Self::ClientWsClientError(_)
+            | Self::ClientSendRequestError(_)
+            | Self::ClientWsHandshakeError(_)
+            | Self::ClientWsProtocolError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
@@ -179,6 +189,18 @@ impl ResponseError for ServerError {
                     HttpResponse::build(StatusCode::PRECONDITION_FAILED).body(TOKIO_TASK_JOIN_ERROR)
                 }
             },
+
+            #[cfg(feature = "client_error")]
+            Self::ClientConnectError(_)
+            | Self::ClientFreezeRequestError(_)
+            | Self::ClientHttpError(_)
+            | Self::ClientJsonPayloadError(_)
+            | Self::ClientWsClientError(_)
+            | Self::ClientSendRequestError(_)
+            | Self::ClientWsHandshakeError(_)
+            | Self::ClientWsProtocolError(_) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(CLIENT_ERROR)
+            }
         }
     }
 }
