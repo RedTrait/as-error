@@ -71,6 +71,10 @@ pub enum ServerError {
     ClientJsonPayloadError(#[from] awc::error::JsonPayloadError),
 
     #[cfg(feature = "client_error")]
+    #[error("PayloadError: {0}")]
+    ClientPayloadError(#[from] awc::error::PayloadError),
+
+    #[cfg(feature = "client_error")]
     #[error("WsClientError: {0}")]
     ClientWsClientError(#[from] awc::error::WsClientError),
 
