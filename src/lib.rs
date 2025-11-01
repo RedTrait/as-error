@@ -53,4 +53,37 @@ pub enum ServerError {
     TokioError(#[from] TokioError),
 }
 
-pub type ResultExt<T> = Result<T, ServerError>;
+#[cfg(feature = "client_error")]
+#[derive(thiserror::Error, Debug)]
+pub enum ClientError {
+    #[cfg(feature = "service_error")]
+    #[error("ServiceError: {0}")]
+    ServiceError(#[from] ServiceError),
+
+    #[error("ConnectError: {0}")]
+    ClientConnectError(#[from] awc::error::ConnectError),
+
+    #[error("FreezeRequestError: {0}")]
+    FreezeRequestError(#[from] awc::error::FreezeRequestError),
+
+    #[error("HttpError: {0}")]
+    HttpError(#[from] awc::error::HttpError),
+
+    #[error("JsonPayloadError: {0}")]
+    JsonPayloadError(#[from] awc::error::JsonPayloadError),
+
+    #[error("WsClientError: {0}")]
+    WsClientError(#[from] awc::error::WsClientError),
+
+    #[error("SendRequestError: {0}")]
+    ClientSendRequestError(#[from] awc::error::SendRequestError),
+
+    #[error("WsHandshakeError: {0}")]
+    WsHandshakeError(#[from] awc::error::WsHandshakeError),
+
+    #[error("WsProtocolError: {0}")]
+    WsProtocolError(#[from] awc::error::WsProtocolError),
+}
+
+pub type ServerResultExt<T> = Result<T, ServerError>;
+pub type ClientResultExt<T> = Result<T, ClientError>;
