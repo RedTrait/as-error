@@ -30,7 +30,8 @@ full = [
 	"service_error",
 	"awc_error",
 	"chrono_error",
-	"rust_decimal_error"
+	"rust_decimal_error",
+	"flatbuffer_error"
 ]
 
 sqlx_error = ["dep:sqlx"]
@@ -41,6 +42,7 @@ tokio_error = ["dep:tokio"]
 awc_error = ["dep:awc"]
 chrono_error = ["dep:chrono"]
 rust_decimal_error = ["dep:rust_decimal"]
+flatbuffer_error = []
 
 [dev-dependencies]
 serde = "1.0"

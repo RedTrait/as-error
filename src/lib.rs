@@ -34,6 +34,8 @@ pub mod const_define {
     pub(crate) const CHRONO_PARSE_ERROR: &'static str = "06_0001";
 
     pub(crate) const DECIMAL_ERROR: &'static str = "07_0000";
+
+    pub(crate) const FLATBUFFER_ERROR: &'static str = "08_0000";
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -101,6 +103,10 @@ pub enum AsError {
     #[cfg(feature = "awc_error")]
     #[error("AwcWsProtocolError: {0}")]
     AwcWsProtocolError(#[from] awc::error::WsProtocolError),
+
+    #[cfg(feature = "flatbuffer_error")]
+    #[error("InvalidFlatbufferError")]
+    InvalidFlatbufferError,
 }
 
 pub type ResultExt<T> = Result<T, AsError>;

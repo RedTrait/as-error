@@ -75,6 +75,9 @@ impl ResponseError for AsError {
 
             #[cfg(feature = "rust_decimal_error")]
             Self::DecimalError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+
+            #[cfg(feature = "flatbuffer_error")]
+            Self::InvalidFlatbufferError => StatusCode::BAD_REQUEST,
         }
     }
 
@@ -218,6 +221,11 @@ impl ResponseError for AsError {
             #[cfg(feature = "rust_decimal_error")]
             Self::DecimalError(_) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(DECIMAL_ERROR)
+            }
+
+            #[cfg(feature = "flatbuffer_error")]
+            Self::InvalidFlatbufferError => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(FLATBUFFER_ERROR)
             }
         }
     }
