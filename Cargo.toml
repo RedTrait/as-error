@@ -15,6 +15,7 @@ redis = { version = "0.32", optional = true }
 serde_json = { version = "1.0", optional = true }
 tokio = { version = "1.47", features = ["full"], optional = true }
 chrono = { version = "0.4", optional = true }
+rust_decimal = { version = "1.39", optional = true }
 
 
 [features]
@@ -28,7 +29,8 @@ full = [
 	"tokio_error",
 	"service_error",
 	"awc_error",
-	"chrono_error"
+	"chrono_error",
+	"rust_decimal_error"
 ]
 
 sqlx_error = ["dep:sqlx"]
@@ -38,6 +40,7 @@ redis_error = ["dep:redis"]
 tokio_error = ["dep:tokio"]
 awc_error = ["dep:awc"]
 chrono_error = ["dep:chrono"]
+rust_decimal_error = ["dep:rust_decimal"]
 
 [dev-dependencies]
 serde = "1.0"

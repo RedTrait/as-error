@@ -70,8 +70,11 @@ impl ResponseError for AsError {
             | Self::AwcWsHandshakeError(_)
             | Self::AwcWsProtocolError(_) => StatusCode::INTERNAL_SERVER_ERROR,
 
-            #[cfg(feature = "awc_error")]
+            #[cfg(feature = "chrono_error")]
             Self::ChronoParseError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+
+            #[cfg(feature = "rust_decimal_error")]
+            Self::DecimalError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
@@ -209,7 +212,12 @@ impl ResponseError for AsError {
 
             #[cfg(feature = "chrono_error")]
             Self::ChronoParseError(_) => {
-                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(CHRONO_PARSE_ERRO)
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(CHRONO_PARSE_ERROR)
+            }
+
+            #[cfg(feature = "rust_decimal_error")]
+            Self::DecimalError(_) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(DECIMAL_ERROR)
             }
         }
     }
