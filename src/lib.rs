@@ -29,11 +29,13 @@ pub mod const_define {
     pub(crate) const TOKIO_ERROR: &'static str = "04_0000";
     pub(crate) const TOKIO_TASK_JOIN_ERROR: &'static str = "04_0001";
 
-    pub(crate) const CLIENT_ERROR: &'static str = "05_0000";
+    pub(crate) const AWC_ERROR: &'static str = "05_0000";
+
+    pub(crate) const CHRONO_PARSE_ERRO: &'static str = "06_0001";
 }
 
 #[derive(thiserror::Error, Debug)]
-pub enum ServerError {
+pub enum AsError {
     #[cfg(feature = "service_error")]
     #[error("ServiceError: {0}")]
     ServiceError(#[from] ServiceError),
@@ -54,41 +56,45 @@ pub enum ServerError {
     #[error("TokioError: {0}")]
     TokioError(#[from] TokioError),
 
-    #[cfg(feature = "client_error")]
-    #[error("ConnectError: {0}")]
-    ClientConnectError(#[from] awc::error::ConnectError),
+    #[cfg(feature = "chrono_error")]
+    #[error("ChronoParseError: {0}")]
+    ChronoParseError(#[from] chrono::ParseError),
 
-    #[cfg(feature = "client_error")]
-    #[error("FreezeRequestError: {0}")]
-    ClientFreezeRequestError(#[from] awc::error::FreezeRequestError),
+    #[cfg(feature = "awc_error")]
+    #[error("AwcConnectError: {0}")]
+    AwcConnectError(#[from] awc::error::ConnectError),
 
-    #[cfg(feature = "client_error")]
-    #[error("HttpError: {0}")]
-    ClientHttpError(#[from] awc::error::HttpError),
+    #[cfg(feature = "awc_error")]
+    #[error("AwcFreezeRequestError: {0}")]
+    AwcFreezeRequestError(#[from] awc::error::FreezeRequestError),
 
-    #[cfg(feature = "client_error")]
-    #[error("JsonPayloadError: {0}")]
-    ClientJsonPayloadError(#[from] awc::error::JsonPayloadError),
+    #[cfg(feature = "awc_error")]
+    #[error("AwcHttpError: {0}")]
+    AwcHttpError(#[from] awc::error::HttpError),
 
-    #[cfg(feature = "client_error")]
-    #[error("PayloadError: {0}")]
-    ClientPayloadError(#[from] awc::error::PayloadError),
+    #[cfg(feature = "awc_error")]
+    #[error("AwcJsonPayloadError: {0}")]
+    AwcJsonPayloadError(#[from] awc::error::JsonPayloadError),
 
-    #[cfg(feature = "client_error")]
-    #[error("WsClientError: {0}")]
-    ClientWsClientError(#[from] awc::error::WsClientError),
+    #[cfg(feature = "awc_error")]
+    #[error("AwcPayloadError: {0}")]
+    AwcPayloadError(#[from] awc::error::PayloadError),
 
-    #[cfg(feature = "client_error")]
-    #[error("SendRequestError: {0}")]
-    ClientSendRequestError(#[from] awc::error::SendRequestError),
+    #[cfg(feature = "awc_error")]
+    #[error("AwcWsClientError: {0}")]
+    AwcWsClientError(#[from] awc::error::WsClientError),
 
-    #[cfg(feature = "client_error")]
-    #[error("WsHandshakeError: {0}")]
-    ClientWsHandshakeError(#[from] awc::error::WsHandshakeError),
+    #[cfg(feature = "awc_error")]
+    #[error("AwcSendRequestError: {0}")]
+    AwcSendRequestError(#[from] awc::error::SendRequestError),
 
-    #[cfg(feature = "client_error")]
-    #[error("WsProtocolError: {0}")]
-    ClientWsProtocolError(#[from] awc::error::WsProtocolError),
+    #[cfg(feature = "awc_error")]
+    #[error("AwcWsHandshakeError: {0}")]
+    AwcWsHandshakeError(#[from] awc::error::WsHandshakeError),
+
+    #[cfg(feature = "awc_error")]
+    #[error("AwcWsProtocolError: {0}")]
+    AwcWsProtocolError(#[from] awc::error::WsProtocolError),
 }
 
-pub type ResultExt<T> = Result<T, ServerError>;
+pub type ResultExt<T> = Result<T, AsError>;

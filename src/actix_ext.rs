@@ -1,8 +1,8 @@
-use crate::ServerError;
+use crate::AsError;
 use crate::const_define::*;
 use actix_web::{HttpResponse, ResponseError, body::BoxBody, http::StatusCode};
 
-impl ResponseError for ServerError {
+impl ResponseError for AsError {
     fn status_code(&self) -> actix_web::http::StatusCode {
         match self {
             #[cfg(feature = "service_error")]
@@ -59,16 +59,19 @@ impl ResponseError for ServerError {
             #[cfg(feature = "tokio_error")]
             Self::TokioError(_) => StatusCode::INTERNAL_SERVER_ERROR,
 
-            #[cfg(feature = "client_error")]
-            Self::ClientConnectError(_)
-            | Self::ClientFreezeRequestError(_)
-            | Self::ClientHttpError(_)
-            | Self::ClientJsonPayloadError(_)
-            | Self::ClientPayloadError(_)
-            | Self::ClientWsClientError(_)
-            | Self::ClientSendRequestError(_)
-            | Self::ClientWsHandshakeError(_)
-            | Self::ClientWsProtocolError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            #[cfg(feature = "awc_error")]
+            Self::AwcConnectError(_)
+            | Self::AwcFreezeRequestError(_)
+            | Self::AwcHttpError(_)
+            | Self::AwcJsonPayloadError(_)
+            | Self::AwcPayloadError(_)
+            | Self::AwcWsClientError(_)
+            | Self::AwcSendRequestError(_)
+            | Self::AwcWsHandshakeError(_)
+            | Self::AwcWsProtocolError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+
+            #[cfg(feature = "awc_error")]
+            Self::ChronoParseError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
@@ -191,17 +194,22 @@ impl ResponseError for ServerError {
                 }
             },
 
-            #[cfg(feature = "client_error")]
-            Self::ClientConnectError(_)
-            | Self::ClientFreezeRequestError(_)
-            | Self::ClientHttpError(_)
-            | Self::ClientJsonPayloadError(_)
-            | Self::ClientPayloadError(_)
-            | Self::ClientWsClientError(_)
-            | Self::ClientSendRequestError(_)
-            | Self::ClientWsHandshakeError(_)
-            | Self::ClientWsProtocolError(_) => {
-                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(CLIENT_ERROR)
+            #[cfg(feature = "awc_error")]
+            Self::AwcConnectError(_)
+            | Self::AwcFreezeRequestError(_)
+            | Self::AwcHttpError(_)
+            | Self::AwcJsonPayloadError(_)
+            | Self::AwcPayloadError(_)
+            | Self::AwcWsClientError(_)
+            | Self::AwcSendRequestError(_)
+            | Self::AwcWsHandshakeError(_)
+            | Self::AwcWsProtocolError(_) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(AWC_ERROR)
+            }
+
+            #[cfg(feature = "chrono_error")]
+            Self::ChronoParseError(_) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(CHRONO_PARSE_ERRO)
             }
         }
     }
