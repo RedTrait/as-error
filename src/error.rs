@@ -1,5 +1,7 @@
 #[cfg(feature = "file_error")]
 pub(crate) mod file;
+#[cfg(feature = "http_response_error")]
+pub(crate) mod http_response;
 #[cfg(feature = "service_error")]
 pub(crate) mod service;
 #[cfg(feature = "service_error")]

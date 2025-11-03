@@ -78,6 +78,9 @@ impl ResponseError for AsError {
 
             #[cfg(feature = "flatbuffer_error")]
             Self::InvalidFlatbufferError => StatusCode::BAD_REQUEST,
+
+            #[cfg(feature = "http_response_error")]
+            Self::HttpResponseNotOK(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
@@ -140,19 +143,16 @@ impl ResponseError for AsError {
                     }
                 }
             }
-
             #[cfg(feature = "sqlx_error")]
             Self::SQLXError(_) => {
                 // TODO: write to log
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(SQLX_ERROR)
             }
-
             #[cfg(feature = "redis_error")]
             Self::RedisError(_) => {
                 // TODO: write to log
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(REDIS_ERROR)
             }
-
             #[cfg(feature = "file_error")]
             Self::FileError(o) => {
                 use crate::error::file::FileError;
@@ -191,7 +191,6 @@ impl ResponseError for AsError {
                     }
                 }
             }
-
             #[cfg(feature = "tokio_error")]
             Self::TokioError(o) => match o {
                 crate::TokioError::TaskJoinError(_join_error) => {
@@ -199,7 +198,6 @@ impl ResponseError for AsError {
                     HttpResponse::build(StatusCode::PRECONDITION_FAILED).body(TOKIO_TASK_JOIN_ERROR)
                 }
             },
-
             #[cfg(feature = "awc_error")]
             Self::AwcConnectError(_)
             | Self::AwcFreezeRequestError(_)
@@ -212,20 +210,21 @@ impl ResponseError for AsError {
             | Self::AwcWsProtocolError(_) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(AWC_ERROR)
             }
-
             #[cfg(feature = "chrono_error")]
             Self::ChronoParseError(_) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(CHRONO_PARSE_ERROR)
             }
-
             #[cfg(feature = "rust_decimal_error")]
             Self::DecimalError(_) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(DECIMAL_ERROR)
             }
-
             #[cfg(feature = "flatbuffer_error")]
             Self::InvalidFlatbufferError => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(FLATBUFFER_ERROR)
+            }
+            #[cfg(feature = "http_response_error")]
+            AsError::HttpResponseNotOK(_) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(HTTP_RESPONSE_ERROR)
             }
         }
     }

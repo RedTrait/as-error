@@ -36,6 +36,8 @@ pub mod const_define {
     pub(crate) const DECIMAL_ERROR: &'static str = "07_0000";
 
     pub(crate) const FLATBUFFER_ERROR: &'static str = "08_0000";
+
+    pub(crate) const HTTP_RESPONSE_ERROR: &'static str = "09_0000";
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -107,6 +109,10 @@ pub enum AsError {
     #[cfg(feature = "flatbuffer_error")]
     #[error("InvalidFlatbufferError")]
     InvalidFlatbufferError,
+
+    #[cfg(feature = "http_response_error")]
+    #[error("HttpResponseNotOK: {0}")]
+    HttpResponseNotOK(#[from] HttpResponseNotOK),
 }
 
 pub type ResultExt<T> = Result<T, AsError>;
