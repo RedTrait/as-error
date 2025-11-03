@@ -4,3 +4,9 @@ use std::string::FromUtf8Error;
 pub enum StringError {
     FromUtf8Error(FromUtf8Error),
 }
+
+impl From<FromUtf8Error> for StringError {
+    fn from(e: FromUtf8Error) -> Self {
+        StringError::FromUtf8Error(e)
+    }
+}
