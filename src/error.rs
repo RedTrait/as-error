@@ -6,5 +6,7 @@ pub(crate) mod http_response;
 pub(crate) mod service;
 #[cfg(feature = "service_error")]
 pub mod service_macros;
+#[cfg(feature = "string_error")]
+pub(crate) mod string;
 #[cfg(feature = "tokio_error")]
 pub(crate) mod tokio;

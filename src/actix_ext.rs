@@ -81,6 +81,9 @@ impl ResponseError for AsError {
 
             #[cfg(feature = "http_response_error")]
             Self::HttpResponseNotOK(_) => StatusCode::INTERNAL_SERVER_ERROR,
+
+            #[cfg(feature = "string_error")]
+            Self::StringError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
@@ -226,6 +229,13 @@ impl ResponseError for AsError {
             AsError::HttpResponseNotOK(_) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(HTTP_RESPONSE_ERROR)
             }
+            #[cfg(feature = "string_error")]
+            AsError::StringError(o) => match o {
+                crate::StringError::FromUtf8Error(_) => {
+                    HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR)
+                        .body(STRING_FROM_UTF8_ERROR)
+                }
+            },
         }
     }
 }

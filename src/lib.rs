@@ -38,6 +38,8 @@ pub mod const_define {
     pub(crate) const FLATBUFFER_ERROR: &'static str = "08_0000";
 
     pub(crate) const HTTP_RESPONSE_ERROR: &'static str = "09_0000";
+
+    pub(crate) const STRING_FROM_UTF8_ERROR: &'static str = "09_0001";
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -113,6 +115,10 @@ pub enum AsError {
     #[cfg(feature = "http_response_error")]
     #[error("HttpResponseNotOK: {0}")]
     HttpResponseNotOK(#[from] HttpResponseNotOK),
+
+    #[cfg(feature = "string_error")]
+    #[error("StringError: {0}")]
+    StringError(#[from] StringError),
 }
 
 pub type ResultExt<T> = Result<T, AsError>;

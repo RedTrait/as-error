@@ -6,5 +6,7 @@ pub use error::file::*;
 pub use error::http_response::*;
 #[cfg(feature = "service_error")]
 pub use error::service::*;
+#[cfg(feature = "string_error")]
+pub use error::string::*;
 #[cfg(feature = "tokio_error")]
 pub use error::tokio::*;
