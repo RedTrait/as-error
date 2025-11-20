@@ -32,6 +32,7 @@ pub mod const_define {
     pub(crate) const AWC_ERROR: &'static str = "05_0000";
 
     pub(crate) const CHRONO_PARSE_ERROR: &'static str = "06_0001";
+    pub(crate) const TIME_ZONE_ERROR_ERROR: &'static str = "06_0002";
 
     pub(crate) const DECIMAL_ERROR: &'static str = "07_0000";
 
@@ -67,6 +68,10 @@ pub enum AsError {
     #[cfg(feature = "chrono_error")]
     #[error("ChronoParseError: {0}")]
     ChronoParseError(#[from] chrono::ParseError),
+
+    #[cfg(feature = "chrono_error")]
+    #[error("TimeZoneError")]
+    TimeZoneError,
 
     #[cfg(feature = "rust_decimal_error")]
     #[error("DecimalError: {0}")]
