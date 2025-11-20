@@ -76,6 +76,9 @@ impl ResponseError for AsError {
             #[cfg(feature = "chrono_error")]
             Self::TimeZoneError => StatusCode::INTERNAL_SERVER_ERROR,
 
+            #[cfg(feature = "chrono_error")]
+            Self::WeekError => StatusCode::INTERNAL_SERVER_ERROR,
+
             #[cfg(feature = "rust_decimal_error")]
             Self::DecimalError(_) => StatusCode::INTERNAL_SERVER_ERROR,
 
@@ -222,7 +225,11 @@ impl ResponseError for AsError {
             }
             #[cfg(feature = "chrono_error")]
             Self::TimeZoneError => {
-                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(TIME_ZONE_ERROR_ERROR)
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(TIME_ZONE_ERROR)
+            }
+            #[cfg(feature = "chrono_error")]
+            Self::WeekError => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(WEEK_ERROR)
             }
             #[cfg(feature = "rust_decimal_error")]
             Self::DecimalError(_) => {
