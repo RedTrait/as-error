@@ -42,6 +42,8 @@ pub mod const_define {
     pub(crate) const HTTP_RESPONSE_ERROR: &'static str = "09_0000";
 
     pub(crate) const STRING_FROM_UTF8_ERROR: &'static str = "09_0001";
+
+    pub(crate) const SERDE_JSON_ERROR: &'static str = "10_0001";
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -129,6 +131,10 @@ pub enum AsError {
     #[cfg(feature = "string_error")]
     #[error("StringError: {0}")]
     StringError(#[from] StringError),
+
+    #[cfg(feature = "serde_error")]
+    #[error("SerdeError: {0}")]
+    SerdeJsonError(#[from] serde_json::Error),
 }
 
 pub type ResultExt<T> = Result<T, AsError>;

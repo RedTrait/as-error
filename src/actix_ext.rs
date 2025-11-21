@@ -90,6 +90,9 @@ impl ResponseError for AsError {
 
             #[cfg(feature = "string_error")]
             Self::StringError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+
+            #[cfg(feature = "serde_error")]
+            Self::SerdeJsonError(_) => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
@@ -240,16 +243,20 @@ impl ResponseError for AsError {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(FLATBUFFER_ERROR)
             }
             #[cfg(feature = "http_response_error")]
-            AsError::HttpResponseNotOK(_) => {
+            Self::HttpResponseNotOK(_) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(HTTP_RESPONSE_ERROR)
             }
             #[cfg(feature = "string_error")]
-            AsError::StringError(o) => match o {
+            Self::StringError(o) => match o {
                 crate::StringError::FromUtf8Error(_) => {
                     HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR)
                         .body(STRING_FROM_UTF8_ERROR)
                 }
             },
+            #[cfg(feature = "serde_error")]
+            Self::SerdeJsonError(_) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(SERDE_JSON_ERROR)
+            }
         }
     }
 }

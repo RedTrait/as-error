@@ -1,6 +1,6 @@
 [package]
 name = "as-error"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2024"
 
 [dependencies]
@@ -33,7 +33,8 @@ full = [
 	"rust_decimal_error",
 	"flatbuffer_error",
 	"http_response_error",
-	"string_error"
+	"string_error",
+	"serde_error"
 ]
 
 sqlx_error = ["dep:sqlx"]
@@ -47,6 +48,7 @@ rust_decimal_error = ["dep:rust_decimal"]
 flatbuffer_error = []
 http_response_error = []
 string_error = []
+serde_error = []
 
 [dev-dependencies]
 serde = "1.0"
