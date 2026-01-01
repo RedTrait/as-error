@@ -4,6 +4,7 @@ pub mod error;
 pub mod prelude;
 pub use prelude::*;
 
+// TODO 这里所有的编码得整理一下
 #[allow(dead_code)]
 pub mod const_define {
     // Service ERROR start with 00_XXXX
@@ -30,20 +31,21 @@ pub mod const_define {
     pub(crate) const TOKIO_TASK_JOIN_ERROR: &'static str = "04_0001";
 
     pub(crate) const AWC_ERROR: &'static str = "05_0000";
+    pub(crate) const REQWEST_ERROR: &'static str = "06_0000";
 
-    pub(crate) const CHRONO_PARSE_ERROR: &'static str = "06_0001";
-    pub(crate) const TIME_ZONE_ERROR: &'static str = "06_0002";
-    pub(crate) const WEEK_ERROR: &'static str = "06_0003";
+    pub(crate) const CHRONO_PARSE_ERROR: &'static str = "07_0001";
+    pub(crate) const TIME_ZONE_ERROR: &'static str = "07_0002";
+    pub(crate) const WEEK_ERROR: &'static str = "07_0003";
 
-    pub(crate) const DECIMAL_ERROR: &'static str = "07_0000";
+    pub(crate) const DECIMAL_ERROR: &'static str = "08_0000";
 
-    pub(crate) const FLATBUFFER_ERROR: &'static str = "08_0000";
+    pub(crate) const FLATBUFFER_ERROR: &'static str = "09_0000";
 
-    pub(crate) const HTTP_RESPONSE_ERROR: &'static str = "09_0000";
+    pub(crate) const HTTP_RESPONSE_ERROR: &'static str = "10_0000";
 
-    pub(crate) const STRING_FROM_UTF8_ERROR: &'static str = "09_0001";
+    pub(crate) const STRING_FROM_UTF8_ERROR: &'static str = "10_0001";
 
-    pub(crate) const SERDE_JSON_ERROR: &'static str = "10_0001";
+    pub(crate) const SERDE_JSON_ERROR: &'static str = "11_0001";
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -119,6 +121,10 @@ pub enum AsError {
     #[cfg(feature = "awc_error")]
     #[error("AwcWsProtocolError: {0}")]
     AwcWsProtocolError(#[from] awc::error::WsProtocolError),
+
+    #[cfg(feature = "reqwest_error")]
+    #[error("ReqwestError: {0}")]
+    ReqwestError(#[from] reqwest::Error),
 
     #[cfg(feature = "flatbuffer_error")]
     #[error("InvalidFlatbufferError")]

@@ -9,6 +9,7 @@ derive_more = { version = "2.0", features = ["display", "error", "from"] }
 
 actix-web = { version = "4" }
 awc = { version = "3.8.1", optional = true }
+reqwest = { version = "0.13.1", optional = true }
 
 sqlx = { version = "0.8.6", optional = true }
 redis = { version = "0.32", optional = true }
@@ -30,6 +31,7 @@ full = [
 	"file_error",
 	"tokio_error",
 	"service_error",
+	"reqwest_error",
 	"awc_error",
 	"chrono_error",
 	"rust_decimal_error",
@@ -38,7 +40,7 @@ full = [
 	"string_error",
 	"serde_error"
 ]
-
+reqwest_error = ["dep:reqwest"]
 sqlx_error = ["dep:sqlx"]
 file_error = []
 service_error = ["dep:serde_json"]

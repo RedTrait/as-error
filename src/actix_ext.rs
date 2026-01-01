@@ -70,6 +70,9 @@ impl ResponseError for AsError {
             | Self::AwcWsHandshakeError(_)
             | Self::AwcWsProtocolError(_) => StatusCode::INTERNAL_SERVER_ERROR,
 
+            #[cfg(feature = "reqwest_error")]
+            Self::ReqwestError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+
             #[cfg(feature = "chrono_error")]
             Self::ChronoParseError(_) => StatusCode::INTERNAL_SERVER_ERROR,
 
@@ -221,6 +224,10 @@ impl ResponseError for AsError {
             | Self::AwcWsHandshakeError(_)
             | Self::AwcWsProtocolError(_) => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(AWC_ERROR)
+            }
+            #[cfg(feature = "reqwest_error")]
+            Self::ReqwestError(_) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(REQWEST_ERROR)
             }
             #[cfg(feature = "chrono_error")]
             Self::ChronoParseError(_) => {
