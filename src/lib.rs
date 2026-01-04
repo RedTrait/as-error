@@ -2,6 +2,8 @@ pub mod actix_ext;
 
 pub mod error;
 pub mod prelude;
+use std::marker::PhantomData;
+
 pub use prelude::*;
 
 // TODO 这里所有的编码得整理一下
@@ -48,11 +50,17 @@ pub mod const_define {
     pub(crate) const SERDE_JSON_ERROR: &'static str = "11_0001";
 
     pub(crate) const RACTOR_ERROR: &'static str = "12_0000";
+
+    pub(crate) const DUMM_ERROR: &'static str = "13_0000";
 }
 
 #[derive(thiserror::Error, Debug)]
-#[allow(dead_code)]
 pub enum AsError<MSG = ()> {
+    #[error("DummError")]
+    DummError,
+    #[error("DummPhantomDataError")]
+    DummPhantomDataError(PhantomData<MSG>),
+
     #[cfg(feature = "service_error")]
     #[error("ServiceError: {0}")]
     ServiceError(#[from] ServiceError),
@@ -161,15 +169,18 @@ pub type ResultExt<T, MSG = ()> = Result<T, AsError<MSG>>;
 
 #[cfg(feature = "ractor_error")]
 pub trait ResultExtCast<T> {
-    fn cast<MSG>(self) -> ResultExt<T, MSG>;
+    fn cast<MSG: std::fmt::Debug>(self) -> ResultExt<T, MSG>;
 }
 
 #[cfg(feature = "ractor_error")]
 impl<T> ResultExtCast<T> for Result<T, AsError<()>> {
-    fn cast<MSG>(self) -> ResultExt<T, MSG> {
+    fn cast<MSG: std::fmt::Debug>(self) -> ResultExt<T, MSG> {
         match self {
             Ok(it) => Ok(it),
             Err(e) => match e {
+                AsError::DummError | AsError::DummPhantomDataError(_) => {
+                    Err(AsError::<MSG>::DummError)
+                }
                 AsError::ServiceError(error) => Err(AsError::<MSG>::ServiceError(error)),
                 AsError::SQLXError(error) => Err(AsError::<MSG>::SQLXError(error)),
                 AsError::FileError(error) => Err(AsError::<MSG>::FileError(error)),

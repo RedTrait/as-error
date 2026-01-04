@@ -5,6 +5,7 @@ use actix_web::{HttpResponse, ResponseError, body::BoxBody, http::StatusCode};
 impl<MSG: std::fmt::Debug> ResponseError for AsError<MSG> {
     fn status_code(&self) -> actix_web::http::StatusCode {
         match self {
+            Self::DummError | Self::DummPhantomDataError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             #[cfg(feature = "service_error")]
             Self::ServiceError(o) => {
                 use crate::error::service::ServiceError;
@@ -104,6 +105,9 @@ impl<MSG: std::fmt::Debug> ResponseError for AsError<MSG> {
 
     fn error_response(&self) -> HttpResponse<BoxBody> {
         match self {
+            Self::DummError | Self::DummPhantomDataError(_) => {
+                HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(DUMM_ERROR)
+            }
             #[cfg(feature = "service_error")]
             Self::ServiceError(o) => {
                 use crate::error::service::ServiceError;
