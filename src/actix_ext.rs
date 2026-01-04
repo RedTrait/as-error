@@ -98,7 +98,7 @@ impl<MSG: std::fmt::Debug> ResponseError for AsError<MSG> {
             Self::SerdeJsonError(_) => StatusCode::INTERNAL_SERVER_ERROR,
 
             #[cfg(feature = "ractor_error")]
-            Self::RactorError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            Self::RactorError(_) | Self::RactorDummError => StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
 
@@ -269,7 +269,7 @@ impl<MSG: std::fmt::Debug> ResponseError for AsError<MSG> {
             }
 
             #[cfg(feature = "ractor_error")]
-            Self::RactorError(_) => {
+            Self::RactorError(_) | Self::RactorDummError => {
                 HttpResponse::build(StatusCode::INTERNAL_SERVER_ERROR).body(RACTOR_ERROR)
             }
         }

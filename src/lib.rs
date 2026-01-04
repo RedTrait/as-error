@@ -147,6 +147,64 @@ pub enum AsError<MSG = ()> {
     #[cfg(feature = "ractor_error")]
     #[error("RactorError: {0}")]
     RactorError(#[from] RactorError<MSG>),
+
+    #[cfg(feature = "ractor_error")]
+    #[error("RactorDummError")]
+    RactorDummError,
+}
+#[cfg(not(feature = "ractor_error"))]
+pub type ResultExt<T> = Result<T, AsError<()>>;
+
+#[cfg(feature = "ractor_error")]
+pub type ResultExt<T, MSG = ()> = Result<T, AsError<MSG>>;
+
+#[cfg(feature = "ractor_error")]
+pub trait ResultExtCast<T> {
+    fn cast<MSG>(self) -> ResultExt<T, MSG>;
 }
 
-pub type ResultExt<T> = Result<T, AsError>;
+#[cfg(feature = "ractor_error")]
+impl<T> ResultExtCast<T> for Result<T, AsError<()>> {
+    fn cast<MSG>(self) -> ResultExt<T, MSG> {
+        match self {
+            Ok(it) => Ok(it),
+            Err(e) => match e {
+                AsError::ServiceError(error) => Err(AsError::<MSG>::ServiceError(error)),
+                AsError::SQLXError(error) => Err(AsError::<MSG>::SQLXError(error)),
+                AsError::FileError(error) => Err(AsError::<MSG>::FileError(error)),
+                AsError::RedisError(error) => Err(AsError::<MSG>::RedisError(error)),
+                AsError::TokioError(error) => Err(AsError::<MSG>::TokioError(error)),
+                AsError::ChronoParseError(error) => Err(AsError::<MSG>::ChronoParseError(error)),
+                AsError::TimeZoneError => Err(AsError::<MSG>::TimeZoneError),
+                AsError::WeekError => Err(AsError::<MSG>::WeekError),
+                AsError::DecimalError(error) => Err(AsError::<MSG>::DecimalError(error)),
+                AsError::AwcConnectError(error) => Err(AsError::<MSG>::AwcConnectError(error)),
+                AsError::AwcFreezeRequestError(error) => {
+                    Err(AsError::<MSG>::AwcFreezeRequestError(error))
+                }
+                AsError::AwcHttpError(error) => Err(AsError::<MSG>::AwcHttpError(error)),
+                AsError::AwcJsonPayloadError(error) => {
+                    Err(AsError::<MSG>::AwcJsonPayloadError(error))
+                }
+                AsError::AwcPayloadError(error) => Err(AsError::<MSG>::AwcPayloadError(error)),
+                AsError::AwcWsClientError(error) => Err(AsError::<MSG>::AwcWsClientError(error)),
+                AsError::AwcSendRequestError(error) => {
+                    Err(AsError::<MSG>::AwcSendRequestError(error))
+                }
+                AsError::AwcWsHandshakeError(error) => {
+                    Err(AsError::<MSG>::AwcWsHandshakeError(error))
+                }
+                AsError::AwcWsProtocolError(error) => {
+                    Err(AsError::<MSG>::AwcWsProtocolError(error))
+                }
+                AsError::ReqwestError(error) => Err(AsError::<MSG>::ReqwestError(error)),
+                AsError::InvalidFlatbufferError => Err(AsError::<MSG>::InvalidFlatbufferError),
+                AsError::HttpResponseNotOK(error) => Err(AsError::<MSG>::HttpResponseNotOK(error)),
+                AsError::StringError(error) => Err(AsError::<MSG>::StringError(error)),
+                AsError::SerdeJsonError(error) => Err(AsError::<MSG>::SerdeJsonError(error)),
+                AsError::RactorError(_) => Err(AsError::<MSG>::RactorDummError),
+                AsError::RactorDummError => Err(AsError::<MSG>::RactorDummError),
+            },
+        }
+    }
+}
