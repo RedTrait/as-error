@@ -50,105 +50,8 @@ pub mod const_define {
     pub(crate) const RACTOR_ERROR: &'static str = "12_0000";
 }
 
-#[cfg(not(feature = "ractor_error"))]
 #[derive(thiserror::Error, Debug)]
-pub enum AsError {
-    #[cfg(feature = "service_error")]
-    #[error("ServiceError: {0}")]
-    ServiceError(#[from] ServiceError),
-
-    #[cfg(feature = "sqlx_error")]
-    #[error("SQLXError: {0}")]
-    SQLXError(#[from] sqlx::Error),
-
-    #[cfg(feature = "file_error")]
-    #[error("FileError: {0}")]
-    FileError(#[from] FileError),
-
-    #[cfg(feature = "redis_error")]
-    #[error("RedisError: {0}")]
-    RedisError(#[from] redis::RedisError),
-
-    #[cfg(feature = "tokio_error")]
-    #[error("TokioError: {0}")]
-    TokioError(#[from] TokioError),
-
-    #[cfg(feature = "chrono_error")]
-    #[error("ChronoParseError: {0}")]
-    ChronoParseError(#[from] chrono::ParseError),
-
-    #[cfg(feature = "chrono_error")]
-    #[error("TimeZoneError")]
-    TimeZoneError,
-
-    #[cfg(feature = "chrono_error")]
-    #[error("WeekError")]
-    WeekError,
-
-    #[cfg(feature = "rust_decimal_error")]
-    #[error("DecimalError: {0}")]
-    DecimalError(#[from] rust_decimal::Error),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcConnectError: {0}")]
-    AwcConnectError(#[from] awc::error::ConnectError),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcFreezeRequestError: {0}")]
-    AwcFreezeRequestError(#[from] awc::error::FreezeRequestError),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcHttpError: {0}")]
-    AwcHttpError(#[from] awc::error::HttpError),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcJsonPayloadError: {0}")]
-    AwcJsonPayloadError(#[from] awc::error::JsonPayloadError),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcPayloadError: {0}")]
-    AwcPayloadError(#[from] awc::error::PayloadError),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcWsClientError: {0}")]
-    AwcWsClientError(#[from] awc::error::WsClientError),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcSendRequestError: {0}")]
-    AwcSendRequestError(#[from] awc::error::SendRequestError),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcWsHandshakeError: {0}")]
-    AwcWsHandshakeError(#[from] awc::error::WsHandshakeError),
-
-    #[cfg(feature = "awc_error")]
-    #[error("AwcWsProtocolError: {0}")]
-    AwcWsProtocolError(#[from] awc::error::WsProtocolError),
-
-    #[cfg(feature = "reqwest_error")]
-    #[error("ReqwestError: {0}")]
-    ReqwestError(#[from] reqwest::Error),
-
-    #[cfg(feature = "flatbuffer_error")]
-    #[error("InvalidFlatbufferError")]
-    InvalidFlatbufferError,
-
-    #[cfg(feature = "http_response_error")]
-    #[error("HttpResponseNotOK: {0}")]
-    HttpResponseNotOK(#[from] HttpResponseNotOK),
-
-    #[cfg(feature = "string_error")]
-    #[error("StringError: {0}")]
-    StringError(#[from] StringError),
-
-    #[cfg(feature = "serde_error")]
-    #[error("SerdeError: {0}")]
-    SerdeJsonError(#[from] serde_json::Error),
-}
-
-#[cfg(any(feature = "ractor_error"))]
-#[derive(thiserror::Error, Debug)]
-pub enum AsError<MSG> {
+pub enum AsError<MSG = ()> {
     #[cfg(feature = "service_error")]
     #[error("ServiceError: {0}")]
     ServiceError(#[from] ServiceError),
@@ -246,8 +149,4 @@ pub enum AsError<MSG> {
     RactorError(#[from] RactorError<MSG>),
 }
 
-#[cfg(not(feature = "ractor_error"))]
 pub type ResultExt<T> = Result<T, AsError>;
-
-#[cfg(any(feature = "ractor_error"))]
-pub type ResultExt<T, MSG> = Result<T, AsError<MSG>>;

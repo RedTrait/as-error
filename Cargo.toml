@@ -40,6 +40,7 @@ full = [
 	"http_response_error",
 	"string_error",
 	"serde_error",
+	"ractor_error"
 ]
 reqwest_error = ["dep:reqwest"]
 sqlx_error = ["dep:sqlx"]
