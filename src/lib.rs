@@ -51,6 +51,7 @@ pub mod const_define {
 }
 
 #[derive(thiserror::Error, Debug)]
+#[allow(dead_code)]
 pub enum AsError<MSG = ()> {
     #[cfg(feature = "service_error")]
     #[error("ServiceError: {0}")]
