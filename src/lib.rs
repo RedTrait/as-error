@@ -154,11 +154,27 @@ pub enum AsError<MSG = ()> {
     SerdeJsonError(#[from] serde_json::Error),
 
     #[cfg(feature = "ractor_error")]
-    #[error("RactorError: {0}")]
-    RactorError(#[from] RactorError<MSG>),
+    #[error("Ractor: {0}")]
+    ActorError(#[from] ractor::errors::ActorErr),
 
     #[cfg(feature = "ractor_error")]
-    #[error("RactorDummError")]
+    #[error("Ractor: {0}")]
+    MessagingError(#[from] ractor::errors::MessagingErr<MSG>),
+
+    #[cfg(feature = "ractor_error")]
+    #[error("Ractor: {0}")]
+    ActorProcessingError(#[from] ractor::errors::ActorProcessingErr),
+
+    #[cfg(feature = "ractor_error")]
+    #[error("Ractor: {0}")]
+    SpawnError(#[from] ractor::errors::SpawnErr),
+
+    #[cfg(feature = "ractor_error")]
+    #[error("Ractor: {0}")]
+    RactorError(#[from] ractor::errors::RactorErr<MSG>),
+
+    #[cfg(feature = "ractor_error")]
+    #[error("Ractor: Dumm")]
     RactorDummError,
 }
 #[cfg(not(feature = "ractor_error"))]
@@ -214,8 +230,12 @@ impl<T> ResultExtCast<T> for Result<T, AsError<()>> {
                 AsError::HttpResponseNotOK(error) => Err(AsError::<MSG>::HttpResponseNotOK(error)),
                 AsError::StringError(error) => Err(AsError::<MSG>::StringError(error)),
                 AsError::SerdeJsonError(error) => Err(AsError::<MSG>::SerdeJsonError(error)),
-                AsError::RactorError(_) => Err(AsError::<MSG>::RactorDummError),
-                AsError::RactorDummError => Err(AsError::<MSG>::RactorDummError),
+                AsError::RactorDummError
+                | AsError::ActorError(_)
+                | AsError::ActorProcessingError(_)
+                | AsError::MessagingError(_)
+                | AsError::SpawnError(_)
+                | AsError::RactorError(_) => Err(AsError::<MSG>::RactorDummError),
             },
         }
     }

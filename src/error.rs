@@ -2,8 +2,6 @@
 pub mod file;
 #[cfg(feature = "http_response_error")]
 pub mod http_response;
-#[cfg(feature = "ractor_error")]
-pub mod ractor;
 #[cfg(feature = "service_error")]
 pub mod service;
 #[cfg(feature = "service_error")]
