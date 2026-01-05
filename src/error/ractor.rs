@@ -14,6 +14,38 @@ pub enum RactorError<MSG> {
     RactorError(RactorErr<MSG>),
 }
 
+impl<MSG> From<ActorErr> for RactorError<MSG> {
+    fn from(e: ActorErr) -> Self {
+        RactorError::ActorError(e)
+    }
+}
+
+impl<MSG> From<MessagingErr<MSG>> for RactorError<MSG> {
+    fn from(e: MessagingErr<MSG>) -> Self {
+        RactorError::MessagingError(e)
+    }
+}
+
+impl<MSG> From<ActorProcessingErr> for RactorError<MSG> {
+    fn from(e: ActorProcessingErr) -> Self {
+        RactorError::ActorProcessingError(e)
+    }
+}
+
+impl<MSG> From<SpawnErr> for RactorError<MSG> {
+    fn from(e: SpawnErr) -> Self {
+        RactorError::SpawnError(e)
+    }
+}
+
+impl<MSG> From<RactorErr<MSG>> for RactorError<MSG> {
+    fn from(e: RactorErr<MSG>) -> Self {
+        RactorError::RactorError(e)
+    }
+}
+
+// ===============================================
+
 impl<MSG> From<ActorErr> for AsError<MSG> {
     fn from(e: ActorErr) -> Self {
         AsError::RactorError(RactorError::ActorError(e))
