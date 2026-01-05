@@ -1,5 +1,5 @@
+use crate::AsError;
 use ractor::errors::{ActorErr, ActorProcessingErr, MessagingErr, RactorErr, SpawnErr};
-
 #[derive(derive_more::Display, derive_more::Error, Debug)]
 pub enum RactorError<MSG> {
     #[display("ActorError: {}", _0)]
@@ -14,32 +14,32 @@ pub enum RactorError<MSG> {
     RactorError(RactorErr<MSG>),
 }
 
-impl<MSG> From<ActorErr> for RactorError<MSG> {
+impl<MSG> From<ActorErr> for AsError<MSG> {
     fn from(e: ActorErr) -> Self {
-        RactorError::ActorError(e)
+        AsError::RactorError(RactorError::ActorError(e))
     }
 }
 
-impl<MSG> From<MessagingErr<MSG>> for RactorError<MSG> {
+impl<MSG> From<MessagingErr<MSG>> for AsError<MSG> {
     fn from(e: MessagingErr<MSG>) -> Self {
-        RactorError::MessagingError(e)
+        AsError::RactorError(RactorError::MessagingError(e))
     }
 }
 
-impl<MSG> From<ActorProcessingErr> for RactorError<MSG> {
+impl<MSG> From<ActorProcessingErr> for AsError<MSG> {
     fn from(e: ActorProcessingErr) -> Self {
-        RactorError::ActorProcessingError(e)
+        AsError::RactorError(RactorError::ActorProcessingError(e))
     }
 }
 
-impl<MSG> From<SpawnErr> for RactorError<MSG> {
+impl<MSG> From<SpawnErr> for AsError<MSG> {
     fn from(e: SpawnErr) -> Self {
-        RactorError::SpawnError(e)
+        AsError::RactorError(RactorError::SpawnError(e))
     }
 }
 
-impl<MSG> From<RactorErr<MSG>> for RactorError<MSG> {
+impl<MSG> From<RactorErr<MSG>> for AsError<MSG> {
     fn from(e: RactorErr<MSG>) -> Self {
-        RactorError::RactorError(e)
+        AsError::RactorError(RactorError::RactorError(e))
     }
 }
