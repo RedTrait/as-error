@@ -14,7 +14,7 @@ struct Point {
     y: i32,
 }
 
-fn serde_json_error() -> ResultExt<Point> {
+fn serde_json_error() -> ResultExt<Point, ()> {
     let point = Point { x: 1, y: 2 };
     let mut serialized =
         serde_json::to_string(&point).map_err(|e| Into::<ServiceError>::into(e))?;

@@ -55,7 +55,7 @@ pub mod const_define {
 }
 
 #[derive(thiserror::Error, Debug)]
-pub enum AsError<MSG = ()> {
+pub enum AsError<MSG> {
     #[error("DummError")]
     DummError,
     #[error("DummPhantomDataError")]
@@ -181,7 +181,7 @@ pub enum AsError<MSG = ()> {
 pub type ResultExt<T> = Result<T, AsError<()>>;
 
 #[cfg(feature = "ractor_error")]
-pub type ResultExt<T, MSG = ()> = Result<T, AsError<MSG>>;
+pub type ResultExt<T, MSG> = Result<T, AsError<MSG>>;
 
 #[cfg(feature = "ractor_error")]
 pub trait ResultExtCast<T> {
