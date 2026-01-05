@@ -82,23 +82,23 @@ pub mod tests {
 
     #[test]
     fn invalid_request() {
-        let error: AsError<()> = invalid_request!(TestThisError::TestError, "H");
+        let error = invalid_request!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: InvalidRequest: TestThisError", error);
-        let error: AsError<()> = invalid_request!(TestderiveMoreError::TestError, "H");
+        let error = invalid_request!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: InvalidRequest: TestderiveMoreError", error);
-        let error: AsError<()> = invalid_request!(TestThisError::TestError, "H".to_owned());
+        let error = invalid_request!(TestThisError::TestError, "H".to_owned());
         let error = error.to_string();
         assert_eq!("ServiceError: InvalidRequest: TestThisError", error);
     }
 
     #[test]
     fn static_invalid_request() {
-        let error: AsError<()> = static_invalid_request!(TestThisError::TestError, "H");
+        let error = static_invalid_request!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: StaticInvalidRequest: TestThisError", error);
-        let error: AsError<()> = static_invalid_request!(TestderiveMoreError::TestError, "H");
+        let error = static_invalid_request!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!(
             "ServiceError: StaticInvalidRequest: TestderiveMoreError",
@@ -108,10 +108,10 @@ pub mod tests {
 
     #[test]
     fn precondition_failed() {
-        let error: AsError<()> = precondition_failed!(TestThisError::TestError, "H");
+        let error = precondition_failed!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: PreconditionFailed: TestThisError", error);
-        let error: AsError<()> = precondition_failed!(TestderiveMoreError::TestError, "H");
+        let error = precondition_failed!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!(
             "ServiceError: PreconditionFailed: TestderiveMoreError",
@@ -121,13 +121,13 @@ pub mod tests {
 
     #[test]
     fn static_precondition_failed() {
-        let error: AsError<()> = static_precondition_failed!(TestThisError::TestError, "H");
+        let error = static_precondition_failed!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!(
             "ServiceError: StaticPreconditionFailed: TestThisError",
             error
         );
-        let error: AsError<()> = static_precondition_failed!(TestderiveMoreError::TestError, "H");
+        let error = static_precondition_failed!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!(
             "ServiceError: StaticPreconditionFailed: TestderiveMoreError",
@@ -137,20 +137,20 @@ pub mod tests {
 
     #[test]
     fn mutex_lock_error() {
-        let error: AsError<()> = mutex_lock_error!(TestThisError::TestError, "H");
+        let error = mutex_lock_error!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: MutexLockError: TestThisError", error);
-        let error: AsError<()> = mutex_lock_error!(TestderiveMoreError::TestError, "H");
+        let error = mutex_lock_error!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: MutexLockError: TestderiveMoreError", error);
     }
 
     #[test]
     fn static_mutex_lock_error() {
-        let error: AsError<()> = static_mutex_lock_error!(TestThisError::TestError, "H");
+        let error = static_mutex_lock_error!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: StaticMutexLockError: TestThisError", error);
-        let error: AsError<()> = static_mutex_lock_error!(TestderiveMoreError::TestError, "H");
+        let error = static_mutex_lock_error!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!(
             "ServiceError: StaticMutexLockError: TestderiveMoreError",
@@ -160,50 +160,50 @@ pub mod tests {
 
     #[test]
     fn json_error() {
-        let error: AsError<()> = json_error!(TestThisError::TestError, "H");
+        let error = json_error!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: JsonError: TestThisError", error);
-        let error: AsError<()> = json_error!(TestderiveMoreError::TestError, "H");
+        let error = json_error!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: JsonError: TestderiveMoreError", error);
     }
 
     #[test]
     fn static_json_error() {
-        let error: AsError<()> = static_json_error!(TestThisError::TestError, "H");
+        let error = static_json_error!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: StaticJsonError: TestThisError", error);
-        let error: AsError<()> = static_json_error!(TestderiveMoreError::TestError, "H");
+        let error = static_json_error!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: StaticJsonError: TestderiveMoreError", error);
     }
 
     #[test]
     fn retry_error() {
-        let error: AsError<()> = retry_error!(TestThisError::TestError, "H");
+        let error = retry_error!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: RetryError: TestThisError", error);
-        let error: AsError<()> = retry_error!(TestderiveMoreError::TestError, "H");
+        let error = retry_error!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: RetryError: TestderiveMoreError", error);
     }
 
     #[test]
     fn static_retry_error() {
-        let error: AsError<()> = static_retry_error!(TestThisError::TestError, "H");
+        let error = static_retry_error!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: StaticRetryError: TestThisError", error);
-        let error: AsError<()> = static_retry_error!(TestderiveMoreError::TestError, "H");
+        let error = static_retry_error!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: StaticRetryError: TestderiveMoreError", error);
     }
 
     #[test]
     fn internal_service_error() {
-        let error: AsError<()> = internal_service_error!(TestThisError::TestError, "H");
+        let error = internal_service_error!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!("ServiceError: InternalServiceError: TestThisError", error);
-        let error: AsError<()> = internal_service_error!(TestderiveMoreError::TestError, "H");
+        let error = internal_service_error!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!(
             "ServiceError: InternalServiceError: TestderiveMoreError",
@@ -213,14 +213,13 @@ pub mod tests {
 
     #[test]
     fn static_internal_service_error() {
-        let error: AsError<()> = static_internal_service_error!(TestThisError::TestError, "H");
+        let error = static_internal_service_error!(TestThisError::TestError, "H");
         let error = error.to_string();
         assert_eq!(
             "ServiceError: StaticInternalServiceError: TestThisError",
             error
         );
-        let error: AsError<()> =
-            static_internal_service_error!(TestderiveMoreError::TestError, "H");
+        let error = static_internal_service_error!(TestderiveMoreError::TestError, "H");
         let error = error.to_string();
         assert_eq!(
             "ServiceError: StaticInternalServiceError: TestderiveMoreError",

@@ -17,7 +17,6 @@ serde_json = { version = "1.0", optional = true }
 tokio = { version = "1.47", features = ["full"], optional = true }
 chrono = { version = "0.4", optional = true }
 rust_decimal = { version = "1.39", optional = true }
-ractor = { version = "0.15.10", optional = true }
 
 uniffi = { version = "0.30.0", features = [ "cli" ] }
 
@@ -40,7 +39,6 @@ full = [
 	"http_response_error",
 	"string_error",
 	"serde_error",
-	"ractor_error"
 ]
 reqwest_error = ["dep:reqwest"]
 sqlx_error = ["dep:sqlx"]
@@ -55,7 +53,6 @@ flatbuffer_error = []
 http_response_error = []
 string_error = []
 serde_error = ["dep:serde_json"]
-ractor_error = ["dep:ractor"]
 
 [dev-dependencies]
 serde = "1.0"

@@ -2,7 +2,6 @@ pub mod actix_ext;
 
 pub mod error;
 pub mod prelude;
-use std::marker::PhantomData;
 
 pub use prelude::*;
 
@@ -50,17 +49,10 @@ pub mod const_define {
     pub(crate) const SERDE_JSON_ERROR: &'static str = "11_0001";
 
     pub(crate) const RACTOR_ERROR: &'static str = "12_0000";
-
-    pub(crate) const DUMM_ERROR: &'static str = "13_0000";
 }
 
 #[derive(thiserror::Error, Debug)]
-pub enum AsError<MSG> {
-    #[error("DummError")]
-    DummError,
-    #[error("DummPhantomDataError")]
-    DummPhantomDataError(PhantomData<MSG>),
-
+pub enum AsError {
     #[cfg(feature = "service_error")]
     #[error("ServiceError: {0}")]
     ServiceError(#[from] ServiceError),
@@ -152,91 +144,6 @@ pub enum AsError<MSG> {
     #[cfg(feature = "serde_error")]
     #[error("SerdeError: {0}")]
     SerdeJsonError(#[from] serde_json::Error),
-
-    #[cfg(feature = "ractor_error")]
-    #[error("Ractor: {0}")]
-    ActorError(#[from] ractor::errors::ActorErr),
-
-    #[cfg(feature = "ractor_error")]
-    #[error("Ractor: {0}")]
-    MessagingError(#[from] ractor::errors::MessagingErr<MSG>),
-
-    #[cfg(feature = "ractor_error")]
-    #[error("Ractor: {0}")]
-    ActorProcessingError(#[from] ractor::errors::ActorProcessingErr),
-
-    #[cfg(feature = "ractor_error")]
-    #[error("Ractor: {0}")]
-    SpawnError(#[from] ractor::errors::SpawnErr),
-
-    #[cfg(feature = "ractor_error")]
-    #[error("Ractor: {0}")]
-    RactorError(#[from] ractor::errors::RactorErr<MSG>),
-
-    #[cfg(feature = "ractor_error")]
-    #[error("Ractor: Dumm")]
-    RactorDummError,
-}
-#[cfg(not(feature = "ractor_error"))]
-pub type ResultExt<T> = Result<T, AsError<()>>;
-
-#[cfg(feature = "ractor_error")]
-pub type ResultExt<T, MSG> = Result<T, AsError<MSG>>;
-
-#[cfg(feature = "ractor_error")]
-pub trait ResultExtCast<T> {
-    fn cast<MSG: std::fmt::Debug>(self) -> ResultExt<T, MSG>;
 }
 
-#[cfg(feature = "ractor_error")]
-impl<T> ResultExtCast<T> for Result<T, AsError<()>> {
-    fn cast<MSG: std::fmt::Debug>(self) -> ResultExt<T, MSG> {
-        match self {
-            Ok(it) => Ok(it),
-            Err(e) => match e {
-                AsError::DummError | AsError::DummPhantomDataError(_) => {
-                    Err(AsError::<MSG>::DummError)
-                }
-                AsError::ServiceError(error) => Err(AsError::<MSG>::ServiceError(error)),
-                AsError::SQLXError(error) => Err(AsError::<MSG>::SQLXError(error)),
-                AsError::FileError(error) => Err(AsError::<MSG>::FileError(error)),
-                AsError::RedisError(error) => Err(AsError::<MSG>::RedisError(error)),
-                AsError::TokioError(error) => Err(AsError::<MSG>::TokioError(error)),
-                AsError::ChronoParseError(error) => Err(AsError::<MSG>::ChronoParseError(error)),
-                AsError::TimeZoneError => Err(AsError::<MSG>::TimeZoneError),
-                AsError::WeekError => Err(AsError::<MSG>::WeekError),
-                AsError::DecimalError(error) => Err(AsError::<MSG>::DecimalError(error)),
-                AsError::AwcConnectError(error) => Err(AsError::<MSG>::AwcConnectError(error)),
-                AsError::AwcFreezeRequestError(error) => {
-                    Err(AsError::<MSG>::AwcFreezeRequestError(error))
-                }
-                AsError::AwcHttpError(error) => Err(AsError::<MSG>::AwcHttpError(error)),
-                AsError::AwcJsonPayloadError(error) => {
-                    Err(AsError::<MSG>::AwcJsonPayloadError(error))
-                }
-                AsError::AwcPayloadError(error) => Err(AsError::<MSG>::AwcPayloadError(error)),
-                AsError::AwcWsClientError(error) => Err(AsError::<MSG>::AwcWsClientError(error)),
-                AsError::AwcSendRequestError(error) => {
-                    Err(AsError::<MSG>::AwcSendRequestError(error))
-                }
-                AsError::AwcWsHandshakeError(error) => {
-                    Err(AsError::<MSG>::AwcWsHandshakeError(error))
-                }
-                AsError::AwcWsProtocolError(error) => {
-                    Err(AsError::<MSG>::AwcWsProtocolError(error))
-                }
-                AsError::ReqwestError(error) => Err(AsError::<MSG>::ReqwestError(error)),
-                AsError::InvalidFlatbufferError => Err(AsError::<MSG>::InvalidFlatbufferError),
-                AsError::HttpResponseNotOK(error) => Err(AsError::<MSG>::HttpResponseNotOK(error)),
-                AsError::StringError(error) => Err(AsError::<MSG>::StringError(error)),
-                AsError::SerdeJsonError(error) => Err(AsError::<MSG>::SerdeJsonError(error)),
-                AsError::RactorDummError
-                | AsError::ActorError(_)
-                | AsError::ActorProcessingError(_)
-                | AsError::MessagingError(_)
-                | AsError::SpawnError(_)
-                | AsError::RactorError(_) => Err(AsError::<MSG>::RactorDummError),
-            },
-        }
-    }
-}
+pub type ResultExt<T> = Result<T, AsError>;

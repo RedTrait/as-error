@@ -14,7 +14,7 @@ struct Point {
     y: i32,
 }
 
-fn serde_json_error() -> ResultExt<Point, ()> {
+fn serde_json_error() -> ResultExt<Point> {
     let point = Point { x: 1, y: 2 };
     let mut serialized =
         serde_json::to_string(&point).map_err(|e| Into::<ServiceError>::into(e))?;
@@ -26,12 +26,11 @@ fn serde_json_error() -> ResultExt<Point, ()> {
 
 fn main() {
     let e = SignUpError::NormalAvatarNotCreate;
-    let quick_error: AsError<()> =
-        static_precondition_failed!(e, "This is a static precondition failed error");
+    let quick_error = static_precondition_failed!(e, "This is a static precondition failed error");
     println!("Quick error: {}", quick_error);
     let e = SignUpError::NormalAvatarNotCreate;
     let info = String::from("This is a string error");
-    let error: AsError<()> = precondition_failed!(e, info);
+    let error = precondition_failed!(e, info);
     println!("Error: {}", error);
     let error = serde_json_error();
     println!("Error: {:?}", error);
